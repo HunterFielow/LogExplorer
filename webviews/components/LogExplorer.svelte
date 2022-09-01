@@ -45,38 +45,42 @@
     function closedrop() {
         open = false;
     }
-</script>
 
-<div style="display:flex;">
-    <div style="flex:7;">
-        <h3>Query input</h3>
-        <input
-            type="text"
-            bind:value={input}
-            on:keypress={(event) => {
-                if (event.key === 'Enter') {
-                    processor.query = input;
-                    processor.processQuery();
-                }
-            }}
-        />
-        <table>
-            <tr>
-                {#each TableColumn as column}
-                    <th>{column}</th>
-                {/each}
-            </tr>
-            {#each processor.processedObject as row}
+</script>
+<div style="display:flex;height:100vh;overflow-y:hidden;">
+    <div id="left-scrollbar" style="flex:7;overflow-y:scroll">
+        <div class="input">
+            <h3>Query input</h3>
+            <input
+                type="text"
+                bind:value={input}
+                on:keypress={(event) => {
+                    if (event.key === 'Enter') {
+                        processor.query = input;
+                        processor.processQuery();
+                    }
+                }}
+            />
+        </div>
+        <div>
+            <table>
                 <tr>
                     {#each TableColumn as column}
-                        <td on:click={() => openlog(row)}>{JSON.stringify(row[column])}</td>
+                        <th>{column}</th>
                     {/each}
                 </tr>
-            {/each}
-        </table>
+                {#each processor.processedObject as row}
+                    <tr>
+                        {#each TableColumn as column}
+                            <td on:click={() => openlog(row)}>{JSON.stringify(row[column])}</td>
+                        {/each}
+                    </tr>
+                {/each}
+            </table>
+        </div>
     </div>
     {#if logclass}
-        <div class="sidenav" style="flex:3; " use:clickOutside on:click_outside={closenav}>
+        <div id="right-scrollbar" class="sidenav" style="flex:3;overflow-y:scroll; ">
             {#each Object.keys(highlightedlog) as key}
                 <p on:click={(event) => opendrop(event, key, highlightedlog[key])}>
                     {key + ': ' + JSON.stringify(highlightedlog[key], undefined, 4)}
