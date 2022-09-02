@@ -1,6 +1,6 @@
 function processAssert(query_part: string, document: any): boolean {
     console.log('Starting processAssert as ' + query_part + ' ' + document.toString());
-    const rekeyvalue = /^\s*"([\w\-\.]+)"(=|!=|<=|<|>|>=)"([\w,-,\s]+)"/i;
+    const rekeyvalue = /^\s*"([\w\-\.]+)"\s*(=|!=|<=|<|>|>=|contain)\s*"([\w,-,\s]+)"/i;
     let match = query_part.match(rekeyvalue);
     if (match) {
         console.log('Indentified signal 1: ' + match[1] + ' 2: ' + match[2] + ' 3: ' + match[3]);
@@ -18,6 +18,8 @@ function processAssert(query_part: string, document: any): boolean {
                     return parseFloat(document[match[1]].toString()) < parseFloat(match[3]);
                 case '<=':
                     return parseFloat(document[match[1]].toString()) <= parseFloat(match[3]);
+                case 'contain':
+                    return document[match[1]].toString().indexOf(match[3]) >= 0;
                 default:
                     console.log('processAssert returned false due to no match[2]');
                     return false;
