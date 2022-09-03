@@ -7,6 +7,7 @@
     let TableColumn = ['message', 'level', 'Default'];
     let processor = new QueryProcessor();
     let highlightedlog: any;
+    let selectedIndex: number;
     let open = false;
     let mouse_x = '0';
     let mouse_y = '0';
@@ -27,8 +28,9 @@
         });
     });
     tsvscode.postMessage({ type: 'getText', value: '' });
-    function openlog(row: any) {
+    function openlog(row: any, index: number) {
         highlightedlog = row;
+        selectedIndex = index;
         logclass = true;
     }
     function closenav() {
@@ -69,12 +71,20 @@
                         <th>{column}</th>
                     {/each}
                 </tr>
-                {#each processor.processedObject as row}
-                    <tr>
+                {#each processor.processedObject as row, index}
+                    {#if selectedIndex == index}
+                    <tr style="background-color: rgba(0, 255, 0, 0.1);">
                         {#each TableColumn as column}
-                            <td on:click={() => openlog(row)}>{JSON.stringify(row[column])}</td>
+                        <td on:click={() => openlog(row, index)}>{JSON.stringify(row[column])}</td>
                         {/each}
                     </tr>
+                    {:else}
+                    <tr>
+                        {#each TableColumn as column}
+                        <td on:click={() => openlog(row, index)}>{JSON.stringify(row[column])}</td>
+                        {/each}
+                    </tr>
+                    {/if}
                 {/each}
             </table>
         </div>
