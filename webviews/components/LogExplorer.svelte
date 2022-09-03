@@ -7,7 +7,7 @@
     let TableColumn = ['message', 'level', 'Default'];
     let processor = new QueryProcessor();
     let highlightedlog: any;
-    let selectedIndex: number;
+    let selectedIndex: number = 0;
     let open = false;
     let mouse_x = '0';
     let mouse_y = '0';
@@ -48,6 +48,17 @@
         open = false;
     }
 
+     function colorRow(row: any, index: number): string {
+        switch(row['level']){
+            case 'error': {
+                return "rgba(255, 0, 0, 0.2)"
+            }
+            default: {
+                return "";
+            }
+        }
+    }
+
 </script>
 <div style="display:flex;height:100vh;overflow-y:hidden;">
     <div id="left-scrollbar" style="flex:7;overflow-y:scroll">
@@ -72,14 +83,14 @@
                     {/each}
                 </tr>
                 {#each processor.processedObject as row, index}
-                    {#if selectedIndex == index}
-                    <tr style="background-color: rgba(0, 255, 0, 0.1);">
+                    {#if index==selectedIndex}
+                    <tr style="background:rgba(0, 255, 0, 0.1)" >
                         {#each TableColumn as column}
                         <td on:click={() => openlog(row, index)}>{JSON.stringify(row[column])}</td>
                         {/each}
                     </tr>
                     {:else}
-                    <tr>
+                    <tr style={"background:"+ colorRow(row, index)} >
                         {#each TableColumn as column}
                         <td on:click={() => openlog(row, index)}>{JSON.stringify(row[column])}</td>
                         {/each}
